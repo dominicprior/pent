@@ -9,6 +9,11 @@ Then to launch the webpage, I typed:
 
 npm run dev
 
+Then to get started with SVG, I typed this:
+
+npm install @svgdotjs/svg.js
+
+and added a snippet of SVG to main.ts.
 
 Get started by customizing your environment (defined in the .idx/dev.nix file) with the tools and IDE extensions you'll need for your project!
 

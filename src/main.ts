@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
 import { sq } from './utils.ts'
 import { cube } from './jsutils.js'
+import { SVG } from '@svgdotjs/svg.js'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -26,3 +27,5 @@ let n: number = 4
 console.log(sq(10)*n)
 console.log(cube(10)*n)
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+let draw = SVG().addTo('body').size(300, 300)
+draw.rect(100, 100).attr({ fill: '#f06' })
