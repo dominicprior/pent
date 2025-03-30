@@ -93,13 +93,13 @@ for (let i=0; i<3; i++) { // COL num - i.e. x.
   }
 }
 
-const emptyBoard: number[][] = new Array(12);
-for (let i = 0; i < 12; i++) {
+const emptyBoard: number[][] = new Array(10);
+for (let i = 0; i < 10; i++) {
   emptyBoard[i] = new Array(6).fill(-1);
 }
 
 function drawBoard(board: number[][]) {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 6; j++) {
       const cell: number = board[i][j];
       const color = cell >= 0 ? colors[cell] : '#ddd';
@@ -109,7 +109,7 @@ function drawBoard(board: number[][]) {
 }
 
 function findFirstEmptyCell(board: number[][]): number[] {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 6; j++) {
       if (board[i][j] === -1) {
         return [i, j];
@@ -125,6 +125,7 @@ function fillBoard(board: number[][], remainingPieces: number[]): void {
   if (foundAnAnswer) {
     return;
   }
+  drawBoard(board);
   if (remainingPieces.length === 0) {
     drawBoard(board);
     foundAnAnswer = true;
@@ -132,7 +133,7 @@ function fillBoard(board: number[][], remainingPieces: number[]): void {
   }
   const firstEmptyCell: number[] = findFirstEmptyCell(board);
   const [i, j] = firstEmptyCell;
-  remainingPieces.forEach((piece, pieceID) => {
+  remainingPieces.forEach((piece) => {
     const pieceOrientations = orientations[piece];
     pieceOrientations.forEach((orientation) => {  // orientation: number[][]
       // e.g. orientation = [[0,0], [0,1], ...]
@@ -140,14 +141,15 @@ function fillBoard(board: number[][], remainingPieces: number[]): void {
       const allEmpty = orientation.every(([ii, jj]) => {
         const x = i + ii;
         const y = j + jj;
-        return x >= 0 && x < 12 && y >= 0 && y < 6 && board[x][y] === -1;
+        return x >= 0 && x < 10 && y >= 0 && y < 6 && board[x][y] === -1;
       });
       if (allEmpty) {
+        let newBoard: number[][] = board.map((row) => row.slice());
         // Fill the cells with the piece ID.
         orientation.forEach(([ii, jj]) => {
-          board[i + ii][j + jj] = pieceID;
+          newBoard[i + ii][j + jj] = piece;
         });
-        fillBoard(board, remainingPieces.filter((_, index) => index !== pieceID));
+        fillBoard(newBoard, remainingPieces.filter((x) => x !== piece));
       }
     })
   });
