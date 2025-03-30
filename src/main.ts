@@ -13,7 +13,7 @@ const colors = [
   '#808000', '#ffd8b1', '#000075',
 ]
 
-// Define the twelve pentominoes as 1D arrays
+// Define the twelve pentominoes as 1D arrays.
 const pentominoes: number[][] = [
   [1,2,10,11,21], // F
   [0,1,2,3,4],    // I
@@ -35,6 +35,57 @@ function drawPentomino(shape: number[], startX: number, startY: number, color: n
     const y = Math.floor(shape[i] / 10) * cellSize + startY;
     draw.rect(cellSize, cellSize).move(x, y).attr({ fill: colors[color] });
   }
+}
+
+// Return the distinct orientations for the given pentomino.
+function findOrientations(pentomino: number[]): number[][][] {
+  let result: number[][][] = [];
+  let orientation: number[][] = pentomino.map(
+          (cell: number) => [Math.floor(cell / 10), cell % 10]);
+    for (let k = 0; k < 4; k++) {
+      for (let kk = 0; kk < 2; kk++) {
+        orientation = canonicalize(orientation); // candidate.
+        if (!member(orientation, result)) {
+          result.push(orientation);
+        }
+        orientation = flip(orientation);
+      }
+      orientation = rotate(orientation);
+    }
+  return result;
+}
+
+const orientations: number[][][][] = pentominoes.map(findOrientations);
+console.log(orientations)
+
+function member(yss: number[][], xsss: number[][][]): boolean {
+  for (const xss of xsss) {  // xss: number[][]
+    if (yss.every((y,i) => xss[i][0] === y[0] && xss[i][1] === y[1])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function rotate(orientation: number[][]): number[][] {
+  return orientation.map(([i,j]) => [-j,i])
+}
+
+function flip(orientation: number[][]): number[][] {
+  return orientation.map(([i,j]) => [-i,j])
+}
+
+// Return a new shape that is shifted so that the smallest cell is at (0,0)
+// where smallest is lexigraphically smallest.
+function canonicalize(shape: number[][]): number[][] {
+  let minCell = [9,9];
+  for (const sh of shape) {
+    if (sh[0] < minCell[0] || (sh[0] == minCell[0] && sh[1] < minCell[1])) {
+      minCell = sh;
+    }
+  }
+  let shiftedShapes: number[][] = shape.map((sh) => [sh[0] - minCell[0], sh[1] - minCell[1]]);
+  return shiftedShapes.sort((a,b) => a[0] * 10 + a[1] - (b[0] * 10 + b[1]));
 }
 
 for (let i=0; i<3; i++) { // COL num - i.e. x.
