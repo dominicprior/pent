@@ -3,7 +3,6 @@ import { SVG } from '@svgdotjs/svg.js'
 let n: number = 4
 console.log(cube(10)*n)
 let draw = SVG().addTo('body').size(300, 800)
-// draw.rect(100, 100).attr({ fill: '#f09' })
 const cellSize = 8;
 
 const colors = [
@@ -90,6 +89,60 @@ function canonicalize(shape: number[][]): number[][] {
 
 for (let i=0; i<3; i++) { // COL num - i.e. x.
   for (let j=0; j<4; j++) {
-    drawPentomino(pentominoes[4*i+j], cellSize*5.5*i, cellSize * 3.5 * j, 4*i+j);
+    drawPentomino(pentominoes[4*i+j], 60+cellSize*5.5*i, cellSize * 3.5 * j, 4*i+j);
   }
 }
+
+const emptyBoard: number[][] = new Array(12);
+for (let i = 0; i < 12; i++) {
+  emptyBoard[i] = new Array(6).fill(-1);
+}
+
+function drawBoard(board: number[][]) {
+  for (let i = 0; i < 12; i++) {
+    for (let j = 0; j < 6; j++) {
+      const cell: number = board[i][j];
+      const color = cell >= 0 ? colors[cell] : '#ddd';
+      draw.rect(cellSize*0.9, cellSize*0.9).move(cellSize * j, cellSize * i).attr({ fill: color });
+    }
+  }
+}
+
+drawBoard(emptyBoard)
+
+function findFirstEmptyCell(board: number[][]): number[] {
+  for (let i = 0; i < 12; i++) {
+    for (let j = 0; j < 6; j++) {
+      if (board[i][j] === -1) {
+        return [i, j];
+      }
+    }
+  }
+  return [-1, -1];
+}
+
+function fillBoard(board: number[][], remainingPieces: number[]): void {
+  if (remainingPieces.length === 0) {
+    return;
+  }
+  const firstEmptyCell: number[] = findFirstEmptyCell(board);
+  const [i, j] = firstEmptyCell;
+  remainingPieces.forEach((piece, pieceID) => {
+    const pieceOrientations = orientations[piece];
+    pieceOrientations.forEach((orientation) => {  // orientation: number[][]
+      // e.g. orientation = [[0,0], [0,1], ...]
+      // Check if the cells implied by the orientation are empty.
+      const allEmpty = orientation.every(([ii, jj]) => {
+        const x = i + ii;
+        const y = j + jj;
+        return x >= 0 && x < 12 && y >= 0 && y < 6 && board[x][y] === -1;
+      });
+      if (allEmpty) {
+        // Fill the cells with the piece ID.
+        orientation.forEach(([ii, jj]) => {
+          board[i + ii][j + jj] = pieceID;
+        });
+        fillBoard(board, remainingPieces.filter((_, index) => index !== pieceID));
+        //
+
+)
