@@ -108,8 +108,6 @@ function drawBoard(board: number[][]) {
   }
 }
 
-drawBoard(emptyBoard)
-
 function findFirstEmptyCell(board: number[][]): number[] {
   for (let i = 0; i < 12; i++) {
     for (let j = 0; j < 6; j++) {
@@ -121,8 +119,15 @@ function findFirstEmptyCell(board: number[][]): number[] {
   return [-1, -1];
 }
 
+let foundAnAnswer = false;
+
 function fillBoard(board: number[][], remainingPieces: number[]): void {
+  if (foundAnAnswer) {
+    return;
+  }
   if (remainingPieces.length === 0) {
+    drawBoard(board);
+    foundAnAnswer = true;
     return;
   }
   const firstEmptyCell: number[] = findFirstEmptyCell(board);
@@ -143,6 +148,9 @@ function fillBoard(board: number[][], remainingPieces: number[]): void {
           board[i + ii][j + jj] = pieceID;
         });
         fillBoard(board, remainingPieces.filter((_, index) => index !== pieceID));
-        //
+      }
+    })
+  });
+}
 
-)
+fillBoard(emptyBoard, [0,1,2,3,4,5,6,7,8,9,10,11]);
