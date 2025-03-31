@@ -131,9 +131,11 @@ let callNum = -1;
 // Also draw a line from the parent position to the current position.
 // Return the width of the tree.
 function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): number {
+//// async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
-  if (foundAnAnswer || callNum > 173) {
+  //// await new Promise(resolve => setTimeout(resolve, 50));
+  if (foundAnAnswer || callNum > 33) {
     return 0;  // any value will do.
   }
   const thisX: number = 8 * cellSize * columnNum;
@@ -147,9 +149,9 @@ function fillBoard(board: number[][], remainingPieces: number[], columnNum: numb
   // }
   const firstEmptyCell: number[] = findFirstEmptyCell(board);
   const [i, j] = firstEmptyCell;
-  remainingPieces.forEach((piece) => {
+  for (const piece of remainingPieces) {
     const pieceOrientations = orientations[piece];
-    pieceOrientations.forEach((orientation) => {  // orientation: number[][]
+    for (const orientation of pieceOrientations) {  // orientation: number[][]
       // e.g. orientation = [[0,0], [0,1], ...]
       // Check if the cells implied by the orientation are empty.
       const allEmpty = orientation.every(([ii, jj]) => {
@@ -164,9 +166,11 @@ function fillBoard(board: number[][], remainingPieces: number[], columnNum: numb
           newBoard[i + ii][j + jj] = piece;
         });
         width += fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY);
+        //// const [newWidth] = await Promise.all([fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY)]);
+        //// width += newWidth;
       }
-    })
-  });
+    }
+  };
   return Math.max(width, 1);
 }
 
