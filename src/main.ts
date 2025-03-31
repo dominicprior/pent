@@ -2,8 +2,8 @@ import { cube } from './jsutils.js'
 import { SVG } from '@svgdotjs/svg.js'
 let n: number = 4
 console.log(cube(10)*n)
-let draw = SVG().addTo('body').size(800, 800)
-const cellSize = 4;
+let draw = SVG().addTo('body').size(1900, 800)
+const cellSize = 3;
 
 const colors = [
   '#e6194B', '#ffe119', '#4363d8', '#f58231', '#911eb4', 
@@ -125,12 +125,16 @@ let callNum = -1;
 // Take the partially filled board and the remainingPieces, and try to fill it
 // by placing a piece in the first empty cell (and therefore the neighbouring
 // cells) and calling itself again with the more filled up board.
-function fillBoard(board: number[][], remainingPieces: number[]): void {
+// Draw the subtree according to the column number and the number of
+// remaining pieces.
+// Return the width of the tree.
+function fillBoard(board: number[][], remainingPieces: number[], columnNum: number): number {
+  let width = 0;
   callNum++;
-  if (foundAnAnswer || callNum > 13) {
-    return;
+  if (foundAnAnswer || callNum > 123) {
+    return 0;  // any value will do.
   }
-  drawBoard(board, 8 * cellSize * callNum, 12 * cellSize * (12-remainingPieces.length));
+  drawBoard(board, 8 * cellSize * columnNum, 12 * cellSize * (12-remainingPieces.length));
   // if (remainingPieces.length === 0) {
   //   drawBoard(board, 90 * callNum);
   //   foundAnAnswer = true;
@@ -154,10 +158,11 @@ function fillBoard(board: number[][], remainingPieces: number[]): void {
         orientation.forEach(([ii, jj]) => {
           newBoard[i + ii][j + jj] = piece;
         });
-        fillBoard(newBoard, remainingPieces.filter((x) => x !== piece));
+        width += fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width);
       }
     })
   });
+  return Math.max(width, 1);
 }
 
-fillBoard(emptyBoard, [0,1,2,3,4,5,6,7,8,9,10,11]);
+fillBoard(emptyBoard, [0,1,2,3,4,5,6,7,8,9,10,11], 0);
