@@ -130,12 +130,12 @@ let callNum = -1;
 // remaining pieces.
 // Also draw a line from the parent position to the current position.
 // Return the width of the tree.
-function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): number {
-//// async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
+//// function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): number {
+async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
-  //// await new Promise(resolve => setTimeout(resolve, 50));
-  if (foundAnAnswer || callNum > 33) {
+  await new Promise(resolve => setTimeout(resolve, 200));
+  if (foundAnAnswer || callNum > 63) {
     return 0;  // any value will do.
   }
   const thisX: number = 8 * cellSize * columnNum;
@@ -165,9 +165,9 @@ function fillBoard(board: number[][], remainingPieces: number[], columnNum: numb
         orientation.forEach(([ii, jj]) => {
           newBoard[i + ii][j + jj] = piece;
         });
-        width += fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY);
-        //// const [newWidth] = await Promise.all([fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY)]);
-        //// width += newWidth;
+        //// width += fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY);
+        const [newWidth] = await Promise.all([fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY)]);
+        width += newWidth;
       }
     }
   };
