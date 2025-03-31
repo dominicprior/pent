@@ -14,9 +14,9 @@ const colors = [
 
 // Define the twelve pentominoes as 1D arrays.
 const pentominoes: number[][] = [
-  [1,2,10,11,21], // F
-  [0,1,2,3,4],    // I
   [0,1,2,3,10],   // L
+  [0,1,2,3,4],    // I
+  [1,2,10,11,21], // F
   [0,1,2,12,13],  // N
   [0,1,2,10,11],  // P
   [0,1,2,11,21],  // T
@@ -134,8 +134,8 @@ let callNum = -1;
 async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
-  await new Promise(resolve => setTimeout(resolve, 200));
-  if (foundAnAnswer || callNum > 63) {
+  await new Promise(resolve => setTimeout(resolve, 100));
+  if (foundAnAnswer || callNum > 73) {
     return 0;  // any value will do.
   }
   const thisX: number = 8 * cellSize * columnNum;
