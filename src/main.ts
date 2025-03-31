@@ -2,8 +2,8 @@ import { cube } from './jsutils.js'
 import { SVG } from '@svgdotjs/svg.js'
 let n: number = 4
 console.log(cube(10)*n)
-let draw = SVG().addTo('body').size(300, 800)
-const cellSize = 8;
+let draw = SVG().addTo('body').size(800, 800)
+const cellSize = 4;
 
 const colors = [
   '#e6194B', '#ffe119', '#4363d8', '#f58231', '#911eb4', 
@@ -98,12 +98,12 @@ for (let i = 0; i < 10; i++) {
   emptyBoard[i] = new Array(6).fill(-1);
 }
 
-function drawBoard(board: number[][]) {
+function drawBoard(board: number[][], xPos: number, yPos: number) {
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 6; j++) {
       const cell: number = board[i][j];
-      const color = cell >= 0 ? colors[cell] : '#ddd';
-      draw.rect(cellSize*0.9, cellSize*0.9).move(cellSize * j, cellSize * i).attr({ fill: color });
+      const color = cell >= 0 ? colors[cell] : '#eee';
+      draw.rect(cellSize, cellSize).move(cellSize * j + xPos, cellSize * i + yPos).attr({ fill: color });
     }
   }
 }
@@ -120,17 +120,22 @@ function findFirstEmptyCell(board: number[][]): number[] {
 }
 
 let foundAnAnswer = false;
+let callNum = -1;
 
+// Take the partially filled board and the remainingPieces, and try to fill it
+// by placing a piece in the first empty cell (and therefore the neighbouring
+// cells) and calling itself again with the more filled up board.
 function fillBoard(board: number[][], remainingPieces: number[]): void {
-  if (foundAnAnswer) {
+  callNum++;
+  if (foundAnAnswer || callNum > 13) {
     return;
   }
-  drawBoard(board);
-  if (remainingPieces.length === 0) {
-    drawBoard(board);
-    foundAnAnswer = true;
-    return;
-  }
+  drawBoard(board, 8 * cellSize * callNum, 12 * cellSize * (12-remainingPieces.length));
+  // if (remainingPieces.length === 0) {
+  //   drawBoard(board, 90 * callNum);
+  //   foundAnAnswer = true;
+  //   return;
+  // }
   const firstEmptyCell: number[] = findFirstEmptyCell(board);
   const [i, j] = firstEmptyCell;
   remainingPieces.forEach((piece) => {
