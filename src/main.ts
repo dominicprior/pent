@@ -121,6 +121,7 @@ function findFirstEmptyCell(board: number[][]): number[] {
 
 let foundAnAnswer = false;
 let callNum = -1;
+let numSuccesses = 0;
 
 // Take the partially filled board and the remainingPieces, and try to fill it
 // by placing a piece in the first empty cell (and therefore the neighbouring
@@ -132,14 +133,20 @@ let callNum = -1;
 async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
-  await new Promise(resolve => setTimeout(resolve, 100));
-  if (foundAnAnswer || callNum > 73) {
+  if (foundAnAnswer || callNum > 31277333) {
     return 0;  // any value will do.
   }
   const thisX: number = 8 * cellSize * columnNum;
   const thisY: number = 14 * cellSize * (12-remainingPieces.length);
-  draw.line(parentX+3*cellSize, parentY+5*cellSize, thisX+3*cellSize, thisY).attr({ stroke: 'black', 'stroke-width': 1 }).back();
-  drawBoard(board, thisX, thisY);
+  if (remainingPieces.length <= 0) {
+    if (numSuccesses % 100 === 0) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      const n100 = Math.floor(numSuccesses / 100);
+      //draw.line(parentX+3*cellSize, parentY+5*cellSize, thisX+3*cellSize, thisY).attr({ stroke: 'black', 'stroke-width': 1 }).back();
+      drawBoard(board, 8 * cellSize * (n100 % 30), 100 + 14 * cellSize * Math.floor(n100 / 30));
+    }
+    numSuccesses++;
+  }
   // if (remainingPieces.length === 0) {
   //   drawBoard(board, 90 * callNum);
   //   foundAnAnswer = true;
@@ -170,4 +177,6 @@ async function fillBoard(board: number[][], remainingPieces: number[], columnNum
   return Math.max(width, 1);
 }
 
-fillBoard(emptyBoard, [0,1,2,3,4,5,6,7,8,9,10,11], 0, 0, 0);
+await fillBoard(emptyBoard, [0,1,2,3,4,5,6,7,8,9,10,11], 0, 0, 0);
+
+console.log("num solutions: " + numSuccesses + ", " + callNum)
