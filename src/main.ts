@@ -1,7 +1,4 @@
-import { cube } from './jsutils.js'
 import { SVG } from '@svgdotjs/svg.js'
-let n: number = 4
-console.log(cube(10)*n)
 let draw = SVG().addTo('body').size(1900, 900)
 const cellSize = 5;
 
@@ -130,7 +127,6 @@ let callNum = -1;
 // remaining pieces.
 // Also draw a line from the parent position to the current position.
 // Return the width of the tree.
-//// function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): number {
 async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
