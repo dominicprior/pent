@@ -1,20 +1,22 @@
+# An animated pentominoes tree search
+
+It does the beginning of a simple depth-first search
+
+# Setting up my environment
+
 From https://www.youtube.com/watch?v=KCrXgy8qtjM I learnt the following.
 
-I created a completely blank workspace in Project IDX and then
-made it into a Vite project by typing this:
+Create a completely blank workspace in Project IDX and then
+make it into a Vite project by typing this:
 
 npm init vite .
 
-Then to launch the webpage, I typed:
+Then launch the webpage:
 
 npm run dev
 
-Then to get started with SVG, I typed this:
+Then to get started with SVG, type this:
 
 npm install @svgdotjs/svg.js
 
-and added a snippet of SVG to main.ts.
-
-Get started by customizing your environment (defined in the .idx/dev.nix file) with the tools and IDE extensions you'll need for your project!
-
-Learn more at https://developers.google.com/idx/guides/customize-idx-env
+and add a snippet of SVG to main.ts.
