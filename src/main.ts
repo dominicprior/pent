@@ -1,6 +1,9 @@
 import { SVG } from '@svgdotjs/svg.js'
 let draw = SVG().addTo('body').size(1900, 900)
 const cellSize = 5;
+const boardWidth = 6;
+const boardHeight = 60 / boardWidth;
+const delay = 20;  // in milliseconds
 
 const colors = [
   '#e6194B', '#ffe119', '#4363d8', '#f58231', '#911eb4', 
@@ -92,15 +95,15 @@ for (let i=0; i<3; i++) { // COL num - i.e. x.
   }
 }
 
-const emptyBoard: number[][] = new Array(10);
-for (let i = 0; i < 10; i++) {
-  emptyBoard[i] = new Array(6).fill(-1);  // -1 means an empty cell.
+const emptyBoard: number[][] = new Array(boardHeight);
+for (let i = 0; i < boardHeight; i++) {
+  emptyBoard[i] = new Array(boardWidth).fill(-1);  // -1 means an empty cell.
 }
 
 // Draw the board with top-left corner at (xPos, yPos).
 function drawBoard(board: number[][], xPos: number, yPos: number) {
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 6; j++) {
+  for (let i = 0; i < boardHeight; i++) {
+    for (let j = 0; j < boardWidth; j++) {
       const cell: number = board[i][j];
       const color = cell >= 0 ? colors[cell] : '#eee';
       draw.rect(cellSize, cellSize).move(cellSize * j + xPos, cellSize * i + yPos).attr({ fill: color });
@@ -109,8 +112,8 @@ function drawBoard(board: number[][], xPos: number, yPos: number) {
 }
 
 function findFirstEmptyCell(board: number[][]): number[] {
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 6; j++) {
+  for (let i = 0; i < boardHeight; i++) {
+    for (let j = 0; j < boardWidth; j++) {
       if (board[i][j] === -1) {
         return [i, j];
       }
@@ -132,12 +135,12 @@ let callNum = -1;
 async function fillBoard(board: number[][], remainingPieces: number[], columnNum: number, parentX: number, parentY: number): Promise<number> {
   let width = 0;
   callNum++;
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, delay));
   if (foundAnAnswer || callNum > 73) {
     return 0;  // any value will do.
   }
-  const thisX: number = 8 * cellSize * columnNum;
-  const thisY: number = 14 * cellSize * (12-remainingPieces.length);
+  const thisX: number = (boardWidth + 2) * cellSize * columnNum;
+  const thisY: number = (boardHeight + 4) * cellSize * (12-remainingPieces.length);
   draw.line(parentX+3*cellSize, parentY+5*cellSize, thisX+3*cellSize, thisY).attr({ stroke: 'black', 'stroke-width': 1 }).back();
   drawBoard(board, thisX, thisY);
   // if (remainingPieces.length === 0) {
@@ -155,7 +158,7 @@ async function fillBoard(board: number[][], remainingPieces: number[], columnNum
       const allEmpty = orientation.every(([ii, jj]) => {
         const x = i + ii;
         const y = j + jj;
-        return x >= 0 && x < 10 && y >= 0 && y < 6 && board[x][y] === -1;
+        return x >= 0 && x < boardHeight && y >= 0 && y < boardWidth && board[x][y] === -1;
       });
       if (allEmpty) {
         let newBoard: number[][] = board.map((row) => row.slice());
