@@ -165,9 +165,7 @@ async function fillBoard(board: number[][], remainingPieces: number[], columnNum
         orientation.forEach(([ii, jj]) => {
           newBoard[i + ii][j + jj] = piece;
         });
-        //// width += fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY);
-        const [newWidth] = await Promise.all([fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY)]);
-        width += newWidth;
+        width += await fillBoard(newBoard, remainingPieces.filter((x) => x !== piece), columnNum + width, thisX, thisY);
       }
     }
   };
