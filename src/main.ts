@@ -9,7 +9,8 @@ const colors = [
   '#808000', '#ffd8b1', '#000075',
 ]
 
-// Define the twelve pentominoes as 1D arrays.
+// Define the twelve pentominoes as 1D arrays.  They get translated
+// into a more useful format later.
 const pentominoes: number[][] = [
   [0,1,2,3,10],   // L
   [0,1,2,3,4],    // I
@@ -72,7 +73,7 @@ function flip(orientation: number[][]): number[][] {
 }
 
 // Return a new shape that is shifted so that the smallest cell is at (0,0)
-// where smallest is lexigraphically smallest.
+// (where smallest is lexigraphically smallest).
 function canonicalize(shape: number[][]): number[][] {
   let minCell = [9,9];
   for (const sh of shape) {
@@ -84,6 +85,7 @@ function canonicalize(shape: number[][]): number[][] {
   return shiftedShapes.sort((a,b) => a[0] * 10 + a[1] - (b[0] * 10 + b[1]));
 }
 
+// Draw one of each pentomino so that the animation then makes more sense.
 for (let i=0; i<3; i++) { // COL num - i.e. x.
   for (let j=0; j<4; j++) {
     drawPentomino(pentominoes[4*i+j], 60+cellSize*5.5*i, cellSize * 3.5 * j, 4*i+j);
@@ -92,7 +94,7 @@ for (let i=0; i<3; i++) { // COL num - i.e. x.
 
 const emptyBoard: number[][] = new Array(10);
 for (let i = 0; i < 10; i++) {
-  emptyBoard[i] = new Array(6).fill(-1);
+  emptyBoard[i] = new Array(6).fill(-1);  // -1 means an empty cell.
 }
 
 // Draw the board with top-left corner at (xPos, yPos).
