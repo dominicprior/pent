@@ -1,6 +1,8 @@
 # An animated pentominoes tree search
 
-It does the beginning of a simple depth-first search
+It does the beginning of a simple depth-first search.
+
+(I've add a hacky git branch called less-graphics that counts all the solutions in a couple of minutes).
 
 # Setting up my environment
 
