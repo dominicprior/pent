@@ -2,7 +2,12 @@
 
 It does the beginning of a simple depth-first search.
 
-(I've add a hacky git branch called less-graphics that counts all the solutions in a couple of minutes).
+(I've added a hacky git branch called less-graphics that counts all the solutions in a couple of minutes).
+
+(This Project IDX workspace has the daft name of 'blank').
+
+(I also somehow added my github as a remote repo and pushed all this.  When cloned onto my local computer, it fails with
+'vite' is not recognized as an internal or external command).
 
 # Setting up my environment
 
